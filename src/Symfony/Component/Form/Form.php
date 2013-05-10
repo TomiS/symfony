@@ -724,9 +724,21 @@ class Form implements \IteratorAggregate, FormInterface
     /**
      * {@inheritdoc}
      */
-    public function getErrors()
+    public function getErrors($deep = false)
     {
-        return $this->errors;
+        if (! $deep) {
+            //This ensures absolute BC
+            return $this->errors;
+        }
+
+        if (empty($this->children)) {
+            return $this->errors;
+        }
+        $temp = array();
+        foreach($this->children as $key => $child) {
+            $temp[$key] = $child->getErrors(true);
+        }
+        return $temp;
     }
 
     /**
