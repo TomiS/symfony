@@ -16,7 +16,7 @@ namespace Symfony\Component\Form;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class FormError
+class FormError implements FormErrorInterface
 {
     /**
      * @var string
@@ -102,4 +102,17 @@ class FormError
     {
         return $this->messagePluralization;
     }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'message' => $this->message,
+            'messageTemplate' => $this->messageTemplate,
+            'messageParameters' => $this->messageParameters,
+            'messagePluralization' => $this->messagePluralization,
+        );
+    }
+
+
+
 }

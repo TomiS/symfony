@@ -96,7 +96,7 @@ interface FormInterface extends \ArrayAccess, \Traversable, \Countable
      *
      * @return FormError[] An array of FormError instances that occurred during validation
      */
-    public function getErrors();
+    public function getErrors($deep = false);
 
     /**
      * Updates the form with default data.

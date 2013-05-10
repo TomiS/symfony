@@ -20,6 +20,7 @@ use Symfony\Component\Form\Exception\OutOfBoundsException;
 use Symfony\Component\Form\Util\FormUtil;
 use Symfony\Component\Form\Util\InheritDataAwareIterator;
 use Symfony\Component\PropertyAccess\PropertyPath;
+use Symfony\Component\Form\FormErrorList;
 
 /**
  * Form represents a form.
@@ -724,9 +725,26 @@ class Form implements \IteratorAggregate, FormInterface
     /**
      * {@inheritdoc}
      */
-    public function getErrors()
+    public function getErrors($deep = false)
     {
-        return $this->errors;
+        if (! $deep) {
+            //This ensures absolute BC
+            return $this->errors;
+        }
+
+        $formErrorList = new FormErrorList($this, $this->errors);
+        if ($deep) {
+            foreach($this->children as $child) {
+                $formErrorList->addItem($child->getErrors(true));
+            }
+        }
+
+        return $formErrorList;
+    }
+
+    public function getErrorsAsStringNew()
+    {
+        return $this->getErrors(true)->__toString();
     }
 
     /**
